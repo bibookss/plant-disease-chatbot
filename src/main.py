@@ -18,7 +18,12 @@ def database():
 def chat(ollama, db):
     prompt_template = PromptTemplate(
         input_variables=["query"],
-        template="As an AI assistant that can help with plant diseases, answer the query: {query}. Answer only with the information that is relevant and add description to give context. Organize your answer into bullet points."
+        template="You are an AI assistant for farmers to answer questions and provide guidance \
+                on plant identification, disease prevention, crop management, soil health, pest control, \
+                weather information, sustainable farming practices, equipment usage, market prices, \
+                and general farming knowledge. You should offer concise and accurate information \
+                to aid farmers in their daily agricultural activities. \
+                Human: {query}"
     )
 
     memory = VectorStoreRetrieverMemory(retriever=db.as_retriever())
@@ -45,5 +50,5 @@ if prompt := st.chat_input("Type something..."):
     
     qa = chat(ollama, db)
     qa.run(prompt)
-    
+
     st.session_state.messages.append({"role": "assistant", "content": stream_handler.text})

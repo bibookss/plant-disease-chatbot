@@ -1,5 +1,5 @@
 from langchain.chat_models import ChatOllama
-from langchain.document_loaders import WebBaseLoader
+from langchain.document_loaders import WebBaseLoader, UnstructuredHTMLLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import GPT4AllEmbeddings
 from langchain.vectorstores import Chroma
@@ -36,9 +36,18 @@ def initialize_db():
 
     # Create the vectorstore
     documents = []
-    for link in links:
-        print(f"Loading {link}")
-        data = WebBaseLoader(link).load()
+    # for link in links:
+    #     print(f"Loading {link}")
+    #     data = WebBaseLoader(link).load()
+    #     documents.extend(data)
+
+    # Get the html files from the data directory
+    dir = os.path.join(os.getcwd(), 'data')
+    files = os.listdir(dir)
+    files = [os.path.join(dir, file) for file in files if file.endswith('.html')]
+    for file in files:
+        print(f"Loading {file}")
+        data = UnstructuredHTMLLoader(file).load()
         documents.extend(data)
         
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)

@@ -25,3 +25,14 @@ links = list(set(links))
 links_dir = os.path.join(dir, 'links.txt')
 with open(links_dir, 'w') as f:
     f.write('\n'.join(links))
+
+# Save each url to a file
+for link in links:
+    page = requests.get(link)
+    soup = BeautifulSoup(page.text, 'html.parser')
+
+    # Save the page to a file
+    filename = link.split('/')[-2] + '.html'
+    page_dir = os.path.join(dir, filename)
+    with open(page_dir, 'w') as f:
+        f.write(soup.prettify())
